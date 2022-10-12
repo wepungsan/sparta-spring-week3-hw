@@ -1,6 +1,5 @@
 package com.sparta.homework2.controller;
 
-import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.CommentRequestDto;
 import com.sparta.homework2.dto.CommentUpdateRequestDto;
 import com.sparta.homework2.service.CommentService;

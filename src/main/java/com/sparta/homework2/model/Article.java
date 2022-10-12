@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -29,6 +31,9 @@ public class Article extends Timestamped {
 
     @Column(nullable = false)
     private String content;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public Article(String title, String author, String password, String content) {
         this.title = title;

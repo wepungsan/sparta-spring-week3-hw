@@ -36,6 +36,6 @@ public class Comment extends Timestamped {
     }
 
     public CommentResponseDto toDto() {
-        return new CommentResponseDto(this.id, this.name, this.comment, this.article);
+        return new CommentResponseDto(this.id, this.name, this.comment);
     }
 }
