@@ -31,9 +31,9 @@ public class CommentController {
     }
 
     @PutMapping("/api/comment")
-    public ResponseEntity<?> updateMemo(ServletRequest request, @RequestBody CommentUpdateRequestDto requestDto) {
+    public ResponseEntity<?> updateMemo(@RequestBody CommentUpdateRequestDto requestDto) {
         try {
-            return ResponseEntity.ok(commentService.updateComment(request, requestDto));
+            return ResponseEntity.ok(commentService.updateComment(requestDto));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {
@@ -42,9 +42,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/api/comment/{id}")
-    public ResponseEntity<?> deleteMemo(ServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
         try {
-            commentService.deleteComment(request, id);
+            commentService.deleteComment(id);
             return ResponseEntity.ok(id);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));

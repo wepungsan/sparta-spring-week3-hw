@@ -10,6 +10,7 @@ import com.sparta.homework2.repository.CommentRepository;
 import com.sparta.homework2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletRequest;
@@ -31,7 +32,7 @@ public class CommentService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        List<CommentResponseDto> comments = commentRepository.findByArticle(article)
+        List<CommentResponseDto> comments = commentRepository.findAllByArticle(article)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."))
                 .stream().map(comment -> comment.toDto()).collect(Collectors.toList());
 
@@ -39,10 +40,16 @@ public class CommentService {
     }
 
     public Comment createComment(Long id, CommentRequestDto requestDto) throws SQLException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
+
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        Comment comment = new Comment(requestDto.getName(), requestDto.getComment(), article);
+        Comment comment = new Comment(member.getUsername(), requestDto.getComment(), article);
 
         commentRepository.save(comment);
 
@@ -50,17 +57,12 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateComment(ServletRequest request, CommentUpdateRequestDto requestDto) {
-        HttpServletRequest req = (HttpServletRequest) request;
+    public Comment updateComment(CommentUpdateRequestDto requestDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
 
-        String token = req.getHeader("Authorization").substring(7);
-
-        Authentication auth = tokenProvider.getAuthentication(token);
-
-        Long memberId = Long.parseLong(auth.getName());
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         Comment comment = commentRepository.findById(requestDto.getId())
                 .orElseThrow(() -> new NullPointerException("해당 댓글이 존재하지 않습니다."));
@@ -76,17 +78,12 @@ public class CommentService {
         return comment;
     }
 
-    public Long deleteComment(ServletRequest request, Long id) {
-        HttpServletRequest req = (HttpServletRequest) request;
+    public Long deleteComment(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
 
-        String token = req.getHeader("Authorization").substring(7);
-
-        Authentication auth = tokenProvider.getAuthentication(token);
-
-        Long memberId = Long.parseLong(auth.getName());
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다."));

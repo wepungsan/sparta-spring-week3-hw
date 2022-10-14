@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CommentRequestDto {
-    private String name;
     private String comment;
 
-    public CommentRequestDto(String name, String comment) {
-        this.name = name;
+    public CommentRequestDto(String comment) {
         this.comment = comment;
     }
 }

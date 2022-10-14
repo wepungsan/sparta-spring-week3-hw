@@ -10,6 +10,7 @@ import com.sparta.homework2.repository.ArticleRepository;
 import com.sparta.homework2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletRequest;
@@ -54,25 +55,26 @@ public class ArticleService {
     }
 
     public Article createArticle(ArticleRequestDto requestDto) throws SQLException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
+
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(requestDto);
+        Article article = new Article(member.getUsername(), requestDto);
 
         articleRepository.save(article);
 
         return article;
     }
 
-    public Long deleteArticle(ServletRequest request, Long id) {
-        HttpServletRequest req = (HttpServletRequest) request;
+    public Long deleteArticle(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
 
-        String token = req.getHeader("Authorization").substring(7);
-
-        Authentication auth = tokenProvider.getAuthentication(token);
-
-        Long memberId = Long.parseLong(auth.getName());
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다."));
@@ -86,17 +88,12 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(ServletRequest request, Long id, ArticleRequestDto requestDto) {
-        HttpServletRequest req = (HttpServletRequest) request;
+    public Article update(Long id, ArticleRequestDto requestDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
 
-        String token = req.getHeader("Authorization").substring(7);
-
-        Authentication auth = tokenProvider.getAuthentication(token);
-
-        Long memberId = Long.parseLong(auth.getName());
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다."));
@@ -105,7 +102,7 @@ public class ArticleService {
            throw new RuntimeException("작성자만 수정할 수 있습니다.");
         }
 
-        article.setAuthor(requestDto.getAuthor());
+        article.setAuthor(member.getUsername());
         article.setTitle(requestDto.getTitle());
         article.setContent(requestDto.getContent());
         article.setPassword(requestDto.getPassword());

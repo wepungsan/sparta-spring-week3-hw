@@ -4,7 +4,7 @@ spring:
       enabled: true
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     properties:
@@ -13,10 +13,10 @@ spring:
         show_sql: true
 
   datasource:
-    url: jdbc:mysql://springboot-database.cuembkmhoi0a.ap-northeast-2.rds.amazonaws.com:3306/myselectshop
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: iy719412
+    url: jdbc:h2:mem:userdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
 logging:
   level:

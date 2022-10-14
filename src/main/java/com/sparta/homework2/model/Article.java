@@ -42,16 +42,16 @@ public class Article extends Timestamped {
         this.content = content;
     }
 
-    public Article(ArticleRequestDto requestDto) {
+    public Article(String username, ArticleRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.author = requestDto.getAuthor();
+        this.author = username;
         this.password = requestDto.getPassword();
         this.content = requestDto.getContent();
     }
 
-    public void update(ArticleRequestDto requestDto) {
+    public void update(String username, ArticleRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.author = requestDto.getAuthor();
+        this.author = username;
         this.password = requestDto.getPassword();
         this.content = requestDto.getContent();
     }

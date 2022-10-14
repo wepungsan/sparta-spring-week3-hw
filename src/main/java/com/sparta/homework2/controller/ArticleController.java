@@ -37,9 +37,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/api/article/{id}")
-    public ResponseEntity<?> deleteMemo(ServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
         try {
-            articleService.deleteArticle(request, id);
+            articleService.deleteArticle(id);
             return ResponseEntity.ok(id);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
@@ -49,9 +49,9 @@ public class ArticleController {
     }
 
     @PutMapping("/api/article/{id}")
-    public ResponseEntity<?> updateMemo(ServletRequest request, @PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+    public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
         try {
-            return ResponseEntity.ok(articleService.update(request, id, requestDto));
+            return ResponseEntity.ok(articleService.update(id, requestDto));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {
