@@ -18,6 +18,7 @@ public class Article extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private Long id;
 
     @Column(nullable = false)
