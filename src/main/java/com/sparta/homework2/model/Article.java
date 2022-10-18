@@ -35,6 +35,9 @@ public class Article extends Timestamped {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
+
     public Article(String title, String author, String password, String content) {
         this.title = title;
         this.author = author;

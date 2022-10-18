@@ -7,6 +7,7 @@ import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Like;
 import com.sparta.homework2.service.LikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +26,13 @@ public class LikeController {
         return ResponseEntity.ok(likeservice.createLike(id));
     }
 
-    @GetMapping("/api/{id}/like")
-    public ResponseEntity<ArticleResponseDto> getArticleWithLike(@PathVariable Long id)
+    @GetMapping("/api/like/{id}")
+    public ResponseEntity<?> getArticleWithLikes(@PathVariable Long id)
             throws SQLException {
-        return ResponseEntity.ok(likeservice.getArticleWithLike(id));
+        try {
+            return ResponseEntity.ok(likeservice.getArticleWithLikes(id));
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
+        }
     }
 }
