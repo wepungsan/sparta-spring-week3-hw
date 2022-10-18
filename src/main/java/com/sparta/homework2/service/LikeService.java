@@ -39,13 +39,16 @@ public class LikeService {
         if (memberRepository.existsByUsername(member.getUsername())) {
             throw new RuntimeException("좋아요는 한번만 가능합니다.");
         }
+
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
+
         Like like = new Like(member, article);
+
         return likeRepository.save(like);
     }
-    
-    @org.springframework.transaction.annotation.Transactional
+
+    @Transactional
     public List<ArticleResponseDto> getArticleWithLikes(Long id) throws SQLException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
