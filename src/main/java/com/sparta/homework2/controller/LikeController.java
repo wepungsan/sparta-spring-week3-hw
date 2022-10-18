@@ -1,5 +1,3 @@
-
-
 package com.sparta.homework2.controller;
 
 import com.sparta.homework2.dto.ArticleResponseDto;
