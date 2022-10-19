@@ -11,4 +11,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findAllByOrderByModifiedAtDesc();
     Optional<Article> findByAuthor(String username);
     Optional<List<Article>> findAllByAuthor(String username);
+    Optional<Article> findById(Long id);
 }

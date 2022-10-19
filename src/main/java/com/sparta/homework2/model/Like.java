@@ -17,7 +17,7 @@ public class Like {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "mamber_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
