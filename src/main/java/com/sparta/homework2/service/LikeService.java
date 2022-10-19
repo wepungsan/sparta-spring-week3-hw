@@ -60,7 +60,7 @@ public class LikeService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        List<Like> likes = likeRepository.findAllByMemberId(member.getId());
+        List<Like> likes = likeRepository.findAllByMemberId(id);
 
         List<ArticleResponseDto> articles = likes.stream()
                 .map(like -> like.getArticle().toDto()).collect(Collectors.toList());
