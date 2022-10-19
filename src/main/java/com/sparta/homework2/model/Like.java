@@ -8,10 +8,9 @@ import javax.persistence.*;
 
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

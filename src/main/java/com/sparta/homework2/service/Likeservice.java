@@ -1,5 +1,6 @@
 package com.sparta.homework2.service;
 
+import com.sparta.homework2.dto.LikeResponseDto;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Like;
 import com.sparta.homework2.model.Member;
@@ -23,18 +24,21 @@ public class Likeservice {
 
 
     @Transactional
-    public Like createLike(Long id) throws SQLException {
+    public LikeResponseDto createLike(Long id) throws SQLException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
         Member member = memberRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
-        if (memberRepository.existsByUsername(member.getUsername())) {
-            throw new RuntimeException("좋아요는 한번만 가능합니다.");
-        }
+
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
+
+        if (likeRepository.existsByMemberIdAndArticleId(member.getId(),article.getId())) {
+            throw new RuntimeException("좋아요는 한번만 가능합니다.");
+        }
         Like like = new Like(member, article);
-        return likeRepository.save(like);
+        likeRepository.save(like);
+        return new LikeResponseDto(member.getUsername(), id);
     }
 }
