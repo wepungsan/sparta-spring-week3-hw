@@ -1,8 +1,7 @@
 package com.sparta.homework2.service;
 
-
-import com.sparta.homework2.dto.LikeResponseDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
+import com.sparta.homework2.dto.LikeResponseDto;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Like;
 import com.sparta.homework2.model.Member;
@@ -13,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 import java.sql.SQLException;
@@ -50,7 +49,7 @@ public class LikeService {
         return new LikeResponseDto(member.getUsername(), id);
     }
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public List<ArticleResponseDto> getArticleWithLikes(Long id) throws SQLException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
