@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "likes")
