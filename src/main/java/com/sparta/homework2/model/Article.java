@@ -1,5 +1,7 @@
 package com.sparta.homework2.model;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
 import lombok.Getter;
@@ -32,9 +34,11 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
@@ -60,6 +64,7 @@ public class Article extends Timestamped {
     }
 
     public ArticleResponseDto toDto() {
-        return new ArticleResponseDto(this.title, this.author, this.content);
+        int likseSize = this.likes.size();
+        return new ArticleResponseDto(this.title, this.author, this.content, this.comments, likseSize);
     }
 }

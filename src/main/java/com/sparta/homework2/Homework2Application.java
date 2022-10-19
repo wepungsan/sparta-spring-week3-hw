@@ -1,9 +1,10 @@
 package com.sparta.homework2;
 
-import com.sparta.homework2.model.Article;
-import com.sparta.homework2.model.Comment;
+import com.sparta.homework2.model.*;
 import com.sparta.homework2.repository.ArticleRepository;
 import com.sparta.homework2.repository.CommentRepository;
+import com.sparta.homework2.repository.LikeRepository;
+import com.sparta.homework2.repository.MemberRepository;
 import com.sparta.homework2.service.ArticleService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,8 +20,14 @@ public class Homework2Application {
 	}
 
 	@Bean
-	public CommandLineRunner demo(ArticleRepository articleRepository, CommentRepository commentRepository) {
+	public CommandLineRunner demo(ArticleRepository articleRepository, CommentRepository commentRepository,
+								  MemberRepository memberRepository, LikeRepository likeRepository) {
 		return (args) -> {
+			memberRepository.save(new Member("wepungsan", "1234", Authority.ROLE_USER));
+
+			Member member1 = memberRepository.findById(1L)
+							.orElseThrow(() -> new NullPointerException("해당 유저가 존재하지 않습니다."));
+
 			articleRepository.save(new Article("제목01", "wepungsan", "1111", "내용01"));
 			articleRepository.save(new Article("제목02", "wepungsan", "2222", "내용02"));
 			articleRepository.save(new Article("제목03", "wepungsan", "3333", "내용03"));
@@ -37,8 +44,7 @@ public class Homework2Application {
 			}
 
 			Article article1 = articleRepository.findById(1L)
-					.orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다." +
-							""));
+					.orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다."));
 			commentRepository.save(new Comment("wepungsan", "1글 1코멘트", article1));
 			commentRepository.save(new Comment("wepungsan", "1글 2코멘트", article1));
 			commentRepository.save(new Comment("wepungsan", "1글 3코멘트", article1));
@@ -51,6 +57,8 @@ public class Homework2Application {
 				System.out.println(comment.getName());
 				System.out.println(comment.getComment());
 			}
+
+			likeRepository.save(new Like(member1, article1));
 		};
 	}
 }
