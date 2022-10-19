@@ -22,11 +22,11 @@ public class LikeController {
         return ResponseEntity.ok(likeservice.createLike(id));
     }
 
-    @GetMapping("/api/like/{id}")
-    public ResponseEntity<?> getArticleWithLikes(@PathVariable Long id)
+    @GetMapping("/api/like/{memberId}")
+    public ResponseEntity<?> getArticleWithLikes(@PathVariable Long memberId)
             throws SQLException {
         try {
-            return ResponseEntity.ok(likeservice.getArticleWithLikes(id));
+            return ResponseEntity.ok(likeservice.getArticleWithLikes(memberId));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         }
